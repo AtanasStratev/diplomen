@@ -1,0 +1,82 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Начало{% endblock %}
+
+{% load static %}
+<!-- starting of the home page-->
+{% block content %}
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="shortcut icon" href="favicon.png" type="image/png">
+    </head>
+
+
+    <body>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <p class="navbar-brand">Топ 20 на криптовалутите по пазарна капитализация:</p>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <form class="d-flex ms-auto">
+                        <input class="form-control me-2" type="search" placeholder="Търсене..." aria-label="Search" id="myInput">
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <div class="px-5 py-2">
+            <table class="container-fluid my-table table-bordered text-center table-responsive table-hover">
+                <thead class="thead-dark bg-light bg-gradient">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Име</th>
+                    <th scope="col">Символ</th>
+                    <th scope="col">Изображение</th>
+                    <th scope="col">Текуща цена</th>
+                    <th scope="col">Пазарна капитализация</th>
+                    <th scope="col">Промяна (24 часа)</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+                    {% for item in api_data %}
+                        <tr>
+                            <td>{{ item.market_cap_rank }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.symbol }}</td>
+                            <td><img width="70px" height="70px" src="{{ item.image }}"></td>
+                            <td>{{ item.current_price }}</td>
+                            <td>{{ item.market_cap }}</td>
+                            {% if item.price_change_percentage_24h > 0%}
+                            <td class="text-success">{{ item.price_change_percentage_24h }}%</td>
+                            {% else %}
+                            <td class="text-danger">{{ item.price_change_percentage_24h }}%</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+            crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+                $("#myInput").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
+{% endblock %}
